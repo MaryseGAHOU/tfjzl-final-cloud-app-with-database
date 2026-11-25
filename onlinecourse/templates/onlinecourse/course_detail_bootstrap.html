@@ -50,7 +50,56 @@
                     </div>
                 {% endfor %}
             </div>
-            <!-- Course detail template changes go here -->
+            
+            {% if user.is_authenticated %}
+                <button type="button"
+                        class="btn btn-primary btn-block mt-3"
+                        data-toggle="collapse"
+                        data-target="#exam"
+                        aria-expanded="false"
+                        aria-controls="exam">
+                    Start Exam
+                </button>
+
+                {% url 'onlinecourse:submit' course.id as submit_url %}
+
+                <div id="exam" class="collapse">
+                    <form id="questionform" action="{{ submit_url }}" method="post">
+                        {% csrf_token %}
+
+                        {% for question in course.question_set.all %}
+                            <div class="card mt-2">
+                                <div class="card-header">
+                                    <h5 class="mb-0">{{ question.content }}</h5>
+                                </div>
+                                <div class="card-body">
+                                    {% for choice in question.choice_set.all %}
+                                        <div class="form-check">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                name="choice_{{ choice.id }}"
+                                                id="choice_{{ choice.id }}"
+                                                value="{{ choice.id }}">
+                                            <label class="form-check-label" for="choice_{{ choice.id }}">
+                                                {{ choice.content }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="mt-2">No exam questions are available for this course.</p>
+                        {% endfor %}
+
+                        {% if course.question_set.all %}
+                            <button type="submit" class="btn btn-success btn-block mt-2"
+                                    {% if not submit_url %}disabled{% endif %}>
+                                Submit
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+            {% endif %}
     </div>
 </body>
 </html>
