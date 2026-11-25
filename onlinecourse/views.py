@@ -205,7 +205,7 @@ def show_exam_result(request, course_id, submission_id):
             "choices": choices,
             "max_score": max_score,
             "percentage": percentage,
-            "passed": percentage >= 80,
+            "passed": percentage > 80,
         },
     )
 
