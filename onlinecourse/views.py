@@ -157,7 +157,7 @@ def submit(request, course_id):
     submission.choices.set(selected_choices)
 
     return redirect(
-        "onlinecourse:exam_result",
+        "onlinecourse:show_exam_result",
         course_id=course.pk,
         submission_id=submission.pk,
     )
@@ -203,6 +203,7 @@ def show_exam_result(request, course_id, submission_id):
             "course": course,
             "grade": total_score,
             "choices": choices,
+            "selected_ids": selected_ids,
             "max_score": max_score,
             "percentage": percentage,
             "passed": percentage > 80,
